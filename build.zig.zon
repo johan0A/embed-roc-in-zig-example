@@ -1,0 +1,13 @@
+.{
+    .name = .embed_roc_example,
+    .version = "0.1.0",
+    .minimum_zig_version = "0.16.0",
+    .dependencies = .{},
+    .fingerprint = 0x800649476b1c6d5f,
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "platform",
+        "src",
+    },
+}
