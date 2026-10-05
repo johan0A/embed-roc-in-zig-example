@@ -54,6 +54,8 @@ pub fn build(b: *std.Build) !void {
     const roc_target = try RocTarget.fromZigTarget(target_option.result);
 
     const roc_build = b.addSystemCommand(&.{ roc_exe, "build" });
+    roc_build.color = .manual;
+    roc_build.setEnvironmentVariable("FORCE_COLOR", "1");
     roc_build.addFileArg(b.path("src/main.roc"));
     roc_build.addArg(b.fmt("--target={s}", .{@tagName(roc_target)}));
     const app_lib = roc_build.addPrefixedOutputFileArg("--output=", roc_target.appLibName());
