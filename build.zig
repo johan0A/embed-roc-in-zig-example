@@ -57,13 +57,14 @@ pub fn build(b: *std.Build) !void {
     roc_build.addFileArg(b.path("src/main.roc"));
     roc_build.addArg(b.fmt("--target={s}", .{@tagName(roc_target)}));
     const app_lib = roc_build.addPrefixedOutputFileArg("--output=", roc_target.appLibName());
-    for ([_][]const u8{
-        "src/platform/main.roc",
-        "src/platform/Host.roc",
-        "src/platform/Stdout.roc",
-        "src/platform/Stderr.roc",
-        "src/platform/Stdin.roc",
-    }) |path| roc_build.addFileInput(b.path(path));
+
+    const platform_path = "src/platform/";
+    const platform_dir = try b.build_root.handle.openDir(b.graph.io, platform_path, .{ .iterate = true });
+    var platform_dir_it = platform_dir.iterate();
+    while (try platform_dir_it.next(b.graph.io)) |file| {
+        const path = b.pathJoin(&.{ platform_path, file.name });
+        roc_build.addFileInput(b.path(path));
+    }
 
     const exe = b.addExecutable(.{
         .name = @tagName(zon.name),
